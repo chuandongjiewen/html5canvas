@@ -2,8 +2,25 @@ window.onload = function(){
 	Game.init();
 }
 
+/**
+ * 继承父类的方法
+ */
+function base(derive,baseSprite,baseArgs){
+	baseSprite.apply(derive,baseArgs);
+	for(prop in baseSprite.prototype){
+		var proto = derive.constructor.prototype;
+		if(!proto[prop]){
+			proto[prop] = baseSprite.prototype[prop];
+		}
+		proto[prop][SUPER] = baseSprite.prototype;
+	}
+}
 var Game = {
-	init: function(){
+	imageArr : {
+		'back':'image/back.png',
+		'floor0' : 'image/floor0.png'
+	},
+	init : function(){
 		console.log('init');
 		var canvas = document.getElementById("game");
 		var context = canvas.getContext("2d");
