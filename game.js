@@ -305,9 +305,9 @@ var Game = {
 		self.context.restore();
 		self.descContent = "我在下楼梯比赛中赢得了"+self.score+"分！";
 		self.canvas.onclick = function(event){
-			debug("restart");
 			if(self.isGameOver){
 				self.reset();
+				debug("restart");
 			}
 		}
 	},
@@ -330,14 +330,30 @@ var Game = {
 			}
 		}
 
-		window.onmousedown = function(event){
-			if(event.offsetX <= self.width / 2){
-				self.curDirection = "left";
-			}else{
-				self.curDirection = "right";
-			}
-			self.stopDefault(event);
-		}
+
+		//手机上的触摸响应
+		window.addEventListener('touchstart', function(event){
+			event.preventDefault();
+        	// nStartX = event.targetTouches[0].pageX;
+        	// nStartY = event.targetTouches[0].pageY;
+        	if(event.touches[0].pageX < self.width / 2){
+   				self.curDirection = "left";
+			}else{  
+		      self.curDirection = "right";
+			}			
+		}, false);
+		
+		// window.addEventListener('touchend',function(event){
+		// 	event.preventDefault();
+		// 	// 获取当前手指位置
+		// 	var nEndX = event.changedTouches[0].pageX;
+		// 	var nEndY = event.changedTouches[0].pageY;
+		// 	if(nEndX <= nStartX){
+		//       self.curDirection = "left";
+		// 	}else{  
+		//       self.curDirection = "right";
+		// 	}			
+		// },false);
 
 		self.timer = setInterval(function(){
 			self.drawBack();
