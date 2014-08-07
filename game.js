@@ -331,25 +331,29 @@ var Game = {
 		}
 
 
+		//手机上的触摸响应
 		window.addEventListener('touchstart', function(event){
 			event.preventDefault();
-        	nStartX = event.targetTouches[0].pageX;
-        	nStartY = event.targetTouches[0].pageY;
-		}, false);
-		// 鼠标或触摸响应.......................................................
-		window.addEventListener('touchend',function(event){
-			event.preventDefault();
-			// 获取当前手指位置
-			var nEndX = event.changedTouches[0].pageX;
-			var nEndY = event.changedTouches[0].pageY;
-			if(nEndX <= nStartX){
-		      self.curDirection = "left";
+        	// nStartX = event.targetTouches[0].pageX;
+        	// nStartY = event.targetTouches[0].pageY;
+        	if(event.touches[0].pageX < self.width / 2){
+   				self.curDirection = "left";
 			}else{  
 		      self.curDirection = "right";
-			}
-			
-			
-		},false);
+			}			
+		}, false);
+		
+		// window.addEventListener('touchend',function(event){
+		// 	event.preventDefault();
+		// 	// 获取当前手指位置
+		// 	var nEndX = event.changedTouches[0].pageX;
+		// 	var nEndY = event.changedTouches[0].pageY;
+		// 	if(nEndX <= nStartX){
+		//       self.curDirection = "left";
+		// 	}else{  
+		//       self.curDirection = "right";
+		// 	}			
+		// },false);
 
 		self.timer = setInterval(function(){
 			self.drawBack();
