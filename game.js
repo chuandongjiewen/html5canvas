@@ -119,7 +119,7 @@ var Game = {
 	// 微信分享
 	imgUrl : 'http://183.61.39.198/downfloor/image/back.png',
 	lineLink : 'http://183.61.39.198/downfloor/index.html',
-	descContent : "是男人就下一百层根本就停不下来！",
+	descContent : "我在下楼梯比赛中！",
 	hareTitle : '我们比比分～',
 	appid : '',
 
@@ -300,10 +300,10 @@ var Game = {
 		self.context.fillStyle = "#00f";
 		self.context.font = "italic 15px sans-serif";
 		self.context.textBaseline = 'top';             //填充字符串
-		self.context.fillText("final score:"+self.score, self.width/2-100, self.height/2-50);
-		self.context.fillText("click screen to restart!!", self.width/2-100, self.height/2-30);
+		self.context.fillText("分数:"+self.score, self.width/2-100, self.height/2-50);
+		self.context.fillText("再玩一次!!", self.width/2-100, self.height/2-30);
 		self.context.restore();
-
+		self.descContent = "我在下楼梯比赛中赢得了"+self.score+"分！";
 		self.canvas.onclick = function(event){
 			debug("restart");
 			if(self.isGameOver){
