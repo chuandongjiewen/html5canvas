@@ -88,9 +88,18 @@ var Game = {
 		self.context = self.canvas.getContext("2d");
 		self.initFloor();
 		self.loadImg(function(){
-
 			self.run();
 		});
+	},
+	reset : function(){
+		var self = this;
+		self.floorList = [];
+		self.curDirection = "none";
+		self.preDirection = "none";
+		self.score = 0;
+		self.isGameOver = false;
+		self.initFloor();
+		self.run();
 	},
 	initFloor : function(){
 		var self = this;
@@ -224,6 +233,24 @@ var Game = {
 		if((self.person.y + self.person.height/2 <= 0) || (self.person.y >= self.height)){
 			isGameOver = true;
 			clearInterval(self.timer);
+			self.onGameOver();
+		}
+	},
+	onGameOver : function(){
+		var self = this;
+		self.context.save();
+		self.context.fillStyle = "#ff8800";
+		self.context.fillRect(self.width/2-100, self.height/2-50, 200, 100);
+		self.context.fillStyle = "#00f";
+		self.context.font = "italic 15px sans-serif";
+		self.context.textBaseline = 'top';             //填充字符串
+		self.context.fillText("final score:"+self.score, self.width/2-100, self.height/2-50);
+		self.context.fillText("click screen to restart!!", self.width/2-100, self.height/2-30);
+		self.context.restore();
+
+		self.canvas.onclick = function(){
+			debug("restart");
+			self.reset();
 		}
 	},
 	clear : function(){
@@ -234,7 +261,7 @@ var Game = {
 
 		window.onkeydown = function(e){
 			var key = e.keyCode;
-			if (key === 80) {  // 'p'
+			if (key === 80) {  
 				// 暂停
 			}if (key === 37) { // left arrow
 				self.curDirection = "left";
