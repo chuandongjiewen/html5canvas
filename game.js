@@ -333,7 +333,7 @@ var Game = {
 
 		//手机上的触摸响应
 		window.addEventListener('touchstart', function(event){
-			event.preventDefault();
+			// event.preventDefault();//不能加这行，不然在手机上点击再玩一次没反应
         	// nStartX = event.targetTouches[0].pageX;
         	// nStartY = event.targetTouches[0].pageY;
         	if(event.touches[0].pageX < self.width / 2){
