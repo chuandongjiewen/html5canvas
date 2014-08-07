@@ -117,8 +117,8 @@ var Game = {
 	isGameOver : false,
 
 	// 微信分享
-	imgUrl : 'http://targetkiller.net/climbUp/icon.jpg',
-	lineLink : 'http://targetkiller.net/climbUp/index.html',
+	imgUrl : 'http://183.61.39.198/downfloor/image/back.png',
+	lineLink : 'http://183.61.39.198/downfloor/index.html',
 	descContent : "是男人就下一百层根本就停不下来！",
 	hareTitle : '我们比比分～',
 	appid : '',
