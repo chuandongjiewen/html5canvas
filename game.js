@@ -305,9 +305,9 @@ var Game = {
 		self.context.restore();
 
 		self.canvas.onclick = function(event){
-			debug("restart");
 			if(self.isGameOver){
 				self.reset();
+				debug("restart");
 			}
 		}
 	},
@@ -330,14 +330,26 @@ var Game = {
 			}
 		}
 
-		window.onmousedown = function(event){
-			if(event.offsetX <= self.width / 2){
-				self.curDirection = "left";
-			}else{
-				self.curDirection = "right";
+
+		window.addEventListener('touchstart', function(event){
+			event.preventDefault();
+        	nStartX = event.targetTouches[0].pageX;
+        	nStartY = event.targetTouches[0].pageY;
+		}, false);
+		// 鼠标或触摸响应.......................................................
+		window.addEventListener('touchend',function(event){
+			event.preventDefault();
+			// 获取当前手指位置
+			var nEndX = event.changedTouches[0].pageX;
+			var nEndY = event.changedTouches[0].pageY;
+			if(nEndX <= nStartX){
+		      self.curDirection = "left";
+			}else{  
+		      self.curDirection = "right";
 			}
-			self.stopDefault(event);
-		}
+			
+			
+		},false);
 
 		self.timer = setInterval(function(){
 			self.drawBack();
