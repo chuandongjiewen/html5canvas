@@ -19,6 +19,55 @@ function debug(msg){
 	console.log(msg);
 }
 
+function shareFriend() {
+    WeixinJSBridge.invoke('sendAppMessage',{
+        "appid": Game.appid,
+        "img_url": Game.imgUrl,
+        "img_width": "200",
+        "img_height": "200",
+        "link": Game.lineLink,
+        "desc": Game.descContent,
+        "title": Game.shareTitle
+    }, function(res) {
+        //_report('send_msg', res.err_msg);
+    })
+}
+function shareTimeline() {
+    WeixinJSBridge.invoke('shareTimeline',{
+        "img_url": Game.imgUrl,
+        "img_width": "200",
+        "img_height": "200",
+        "link": Game.lineLink,
+        "desc": Game.descContent,
+        "title": Game.shareTitle
+    }, function(res) {
+           //_report('timeline', res.err_msg);
+    });
+}
+function shareWeibo() {
+    WeixinJSBridge.invoke('shareWeibo',{
+        "content": Game.descContent,
+        "url": Game.lineLink,
+    }, function(res) {
+        //_report('weibo', res.err_msg);
+    });
+}
+// 当微信内置浏览器完成内部初始化后会触发WeixinJSBridgeReady事件。
+document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
+    // 发送给好友
+    WeixinJSBridge.on('menu:share:appmessage', function(argv){
+        shareFriend();
+    });
+    // 分享到朋友圈
+    WeixinJSBridge.on('menu:share:timeline', function(argv){
+        shareTimeline();
+    });
+    // 分享到微博
+    WeixinJSBridge.on('menu:share:weibo', function(argv){
+        shareWeibo();
+    });
+}, false);
+
 function Floor0(x,y){
 	this.width = 100;
 	this.height = 20;
@@ -66,6 +115,13 @@ var Game = {
 
 	score : 0, //当前得分
 	isGameOver : false,
+
+	// 微信分享
+	imgUrl : 'http://targetkiller.net/climbUp/icon.jpg',
+	lineLink : 'http://targetkiller.net/climbUp/index.html',
+	descContent : "是男人就下一百层根本就停不下来！",
+	hareTitle : '我们比比分～',
+	appid : '',
 
 	loadImg : function(callback){
 		var self = this;
@@ -231,7 +287,7 @@ var Game = {
 	detectGameOver : function(){
 		var self = this;
 		if((self.person.y + self.person.height/2 <= 0) || (self.person.y >= self.height)){
-			isGameOver = true;
+			self.isGameOver = true;
 			clearInterval(self.timer);
 			self.onGameOver();
 		}
@@ -248,9 +304,11 @@ var Game = {
 		self.context.fillText("click screen to restart!!", self.width/2-100, self.height/2-30);
 		self.context.restore();
 
-		self.canvas.onclick = function(){
+		self.canvas.onclick = function(event){
 			debug("restart");
-			self.reset();
+			if(self.isGameOver){
+				self.reset();
+			}
 		}
 	},
 	clear : function(){
@@ -272,6 +330,15 @@ var Game = {
 			}
 		}
 
+		window.onmousedown = function(event){
+			if(event.offsetX <= self.width / 2){
+				self.curDirection = "left";
+			}else{
+				self.curDirection = "right";
+			}
+			self.stopDefault(event);
+		}
+
 		self.timer = setInterval(function(){
 			self.drawBack();
 			self.drawFloor0();
@@ -281,6 +348,15 @@ var Game = {
 			self.detectCollide();
 			self.detectGameOver();
 		}, 1000/60);
+	},
+	//这个方法暂时有点问题，有些手机浏览器默认双击是界面放大
+	stopDefault : function(e){
+		if (e && e.preventDefault) {//如果是FF下执行这个
+	        e.preventDefault();
+	    }else{
+	        window.event.returnValue = false;//如果是IE下执行这个
+	    }
+	    return false;
 	}
 
 };
