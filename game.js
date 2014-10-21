@@ -155,6 +155,7 @@ var Game = {
 		self.preDirection = "none";
 		self.score = 0;
 		self.isGameOver = false;
+		self.personIsFalling = false;
 		self.initFloor();
 		self.run();
 	},
@@ -213,56 +214,39 @@ var Game = {
 		var self = this;
 		var span = 3;
 		var fallSpan = 2
-		if(self.curDirection == "left"){
-			if(self.personIsFalling == false){
-				if (self.person.x - span >= self.personFloor.x){
-					self.person.x -= span;
-					self.person.y -= self.floorSpeed;
-				}else{
-					self.personIsFalling = true;
-				}
+		if(self.personIsFalling == false && self.curDirection == "left"){
+			if (self.person.x - span <= self.personFloor.x - self.person.width/2){
+				self.personIsFalling = true;
 			}
-			self.preDirection = self.curDirection;
-		}else if(self.curDirection == "right"){
-			if(self.personIsFalling == false){
-				if (self.person.x + span <= self.personFloor.x + self.personFloor.width - self.person.width/2) {
-					self.person.x += span;
-					self.person.y -= self.floorSpeed;
-				}else{
-					self.personIsFalling = true;
-				}
+		}else if(self.personIsFalling == false && self.curDirection == "right"){
+			if (self.person.x + span >= self.personFloor.x + self.personFloor.width - self.person.width/2) {
+				self.personIsFalling = true;
 			}
-			self.preDirection = self.curDirection;
-		}else{
-			self.person.y -= self.floorSpeed;
 		}
 
-		self.curDirection = "none";
-
 		if(!self.personIsFalling){
-			if(self.preDirection != "none" && self.personCurSteps < self.personSumSteps){
-				if(self.preDirection == "left"){
+			self.person.y -= self.floorSpeed;
+			if(self.curDirection != "none" && self.personCurSteps < self.personSumSteps){
+				if(self.curDirection == "left"){
 					self.person.x -= span;
-				}else if(self.preDirection == "right"){
+				}else if(self.curDirection == "right"){
 					self.person.x += span;
 				}
 				self.personCurSteps ++;
 			}else{
-				self.preDirection = "none";
+				self.curDirection = "none";
 				self.personCurSteps = 0;
 			}
 		}
 
-		// debug("----"+self.preDirection);
-		if(self.personIsFalling && self.preDirection == "left"){
+		if(self.personIsFalling && self.curDirection == "left"){
 			self.person.x = (self.person.x - fallSpan >= 0) ? self.person.x - fallSpan : 0;
 			self.person.y += self.personFallSpeed;
-		}else if(self.personIsFalling && self.preDirection == "right"){
+		}else if(self.personIsFalling && self.curDirection == "right"){
 			self.person.x = (self.person.x + fallSpan <= self.width - self.person.width) ? self.person.x + fallSpan : self.width - self.person.width;
 			self.person.y += self.personFallSpeed;
 		}
 
-		// debug(self.personFloor);	
 	},
 	//检测碰撞
 	detectCollide : function(){
@@ -337,9 +321,6 @@ var Game = {
 
 		//手机上的触摸响应
 		window.addEventListener('touchstart', function(event){
-			// event.preventDefault();//不能加这行，不然在手机上点击再玩一次没反应
-        	// nStartX = event.targetTouches[0].pageX;
-        	// nStartY = event.targetTouches[0].pageY;
         	if(event.touches[0].pageX < self.width / 2){
    				self.curDirection = "left";
 			}else{  
